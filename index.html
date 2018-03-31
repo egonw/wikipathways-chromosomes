@@ -6,7 +6,9 @@
 </head>
 <body>
 <script>
-  var wikipathwaysApiClientInstance = new WikipathwaysApiClient();
+  var wikipathwaysApiClientInstance = new WikipathwaysApiClient(
+    baseIri = 'https://webservice.wikipathways.org/'
+  );
   wikipathwaysApiClientInstance.getPathway({
           fileFormat: "gpml",
           identifier: "WP4",
