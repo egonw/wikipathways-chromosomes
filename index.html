@@ -6,6 +6,16 @@
 </head>
 <body>
 <script>
+  var wikipathwaysApiClientInstance = new WikipathwaysApiClient();
+  wikipathwaysApiClientInstance.getPathway({
+          fileFormat: "gpml",
+          identifier: "WP4",
+          version: "",
+        })
+          .subscribe(function(pathwayAs) {
+            console.log( pathwayAs );
+          }, console.error)
+  
   var ideogram = new Ideogram({
     organism: 'human',
     annotations: [{
