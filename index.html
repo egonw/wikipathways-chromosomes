@@ -1,34 +1,19 @@
 <head>
   <script src="https://unpkg.com/ideogram@1.0.0/dist/js/ideogram.min.js"></script>
-  <script src="https://wikipathways.github.io/wikipathways-api-client-js/1.1.6/dist/bundle.min.js"></script>
   <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/v5.1.4/dist/wikidata-sdk.min.js"></script>
   <script src="https://unpkg.com/ideogram@1.0.0/dist/data/bands/native/homo-sapiens.js"></script>
 </head>
 <body>
 <script>
-  var wikipathwaysApiClientInstance = new WikipathwaysApiClient({
-    baseIri: 'https://webservice.wikipathways.org/'
+  var geneInfo = [{
+      name: 'BRCA1',
+      chr: '17',
+      start: 43044294,
+      stop: 43125482
+    }];
+  var ideogram = new Ideogram({
+    organism: 'human',
+    annotations: geneInfo
   });
-  wikipathwaysApiClientInstance.getPathway({
-    fileFormat: "gpml",
-    identifier: "WP4",
-    version: "",
-  }).subscribe(
-    function(pathwayAs) {
-      var gpmlContent = new window.DOMParser().parseFromString(pathwayAs, "text/xml");
-      var dataNodes = gpmlContent.querySelector('DataNode[Type="GeneProduct"]')
-      console.log(gpmlContent, dataNodes)
-      var ideogram = new Ideogram({
-        organism: 'human',
-        annotations: [{
-          name: 'BRCA1',
-          chr: '17',
-          start: 43044294,
-          stop: 43125482
-        }]
-      });
-    },
-    console.error
-  )
 </script>
 </body>
