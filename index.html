@@ -16,7 +16,7 @@
   }).subscribe(
     function(pathwayAs) {
       var gpmlContent = new window.DOMParser().parseFromString(pathwayAs, "text/xml");
-      var dataNodes = gpmlContent.querySelector('DataNode[type="GeneProduct"]')
+      var dataNodes = gpmlContent.querySelector('DataNode[Type="GeneProduct"]')
       console.log(gpmlContent, dataNodes)
       var ideogram = new Ideogram({
         organism: 'human',
