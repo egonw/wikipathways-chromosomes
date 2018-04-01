@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/ideogram@1.0.0/dist/js/ideogram.min.js"></script>
+    <script src="https://cdn.rawgit.com/maxlath/wikidata-sdk/v5.1.4/dist/wikidata-sdk.min.js"></script>
+    <script src="https://unpkg.com/ideogram@1.0.0/dist/data/bands/native/homo-sapiens.js"></script>
+  </head>
+  <body>
+  <script>
+    (async function () {
+      var pathwayId = ['R-HSA-532668']
+      
+      var url = wdk.sparqlQuery(
+`SELECT DISTINCT ?name ?chr ?start ?stop WITH {
+  SELECT DISTINCT ?gene ?name ?chr WHERE {
+    VALUES ?pathwayID { ${pathwayId.map(JSON.stringify).join(' ')} }
+    ?pathway wdt:P527+/wdt:P702 ?gene ;
+             wdt:P3937 ?pathwayID .
+    ?gene wdt:P1057/wdt:P1813 ?chr ;
+          wdt:P353 ?name .
+  }
+} AS %result
+WHERE {
+  INCLUDE %result
+  ?gene p:P644 [
+    pq:P659 wd:Q20966585 ;
+    ps:P644 ?start
+  ] .
+  ?gene p:P645 [
+    pq:P659 wd:Q20966585 ;
+    ps:P645 ?stop
+  ]
+}
+`
+)
+      var response = await fetch(url)
+      var geneInfo = wdk.simplifySparqlResults(await response.json()).map(o => {
+        o.start = +o.start
+        o.stop = +o.stop
+        return o
+      })
+      
+      var ideogram = new Ideogram({
+        organism: 'human',
+        annotations: geneInfo
+      })
+    })()
+  </script>
+  </body>
+</html>
