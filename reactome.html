@@ -13,14 +13,20 @@
 `SELECT DISTINCT ?name ?chr ?start ?stop WITH {
   SELECT DISTINCT ?gene ?name ?chr WHERE {
     VALUES ?pathwayID { ${pathwayId.map(JSON.stringify).join(' ')} }
-    ?pathway wdt:P527+/wdt:P702 ?gene ;
+    ?pathway wdt:P527+ ?protein ;
              wdt:P3937 ?pathwayID .
+  }
+} AS %result
+WITH {
+  SELECT DISTINCT ?gene ?name ?chr WHERE {
+    INCLUDE %result
+    ?protein wdt:P702 ?gene .
     ?gene wdt:P1057/wdt:P1813 ?chr ;
           wdt:P353 ?name .
   }
-} AS %result
+} AS %result2
 WHERE {
-  INCLUDE %result
+  INCLUDE %result2
   ?gene p:P644 [
     pq:P659 wd:Q20966585 ;
     ps:P644 ?start
@@ -29,8 +35,7 @@ WHERE {
     pq:P659 wd:Q20966585 ;
     ps:P645 ?stop
   ]
-}
-`
+}`
 )
       var response = await fetch(url)
       var geneInfo = wdk.simplifySparqlResults(await response.json()).map(o => {
